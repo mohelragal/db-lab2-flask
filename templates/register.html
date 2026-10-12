@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-copy">
+    <div class="eyebrow">YOUR DAY, ORGANIZED</div>
+    <h1>Make room for<br><span>what matters.</span></h1>
+    <p>Create an account to keep your tasks in one calm, organized place.</p>
+    <div class="mini-note"><span>✓</span> A little progress adds up.</div>
+  </div>
+  <div class="panel auth-panel">
+    <div class="panel-heading">
+      <h2>Create your account</h2>
+      <p>It only takes a minute to get started.</p>
+    </div>
+    <form method="post" action="{{ url_for('register') }}" id="register-form" novalidate>
+      <label for="name">Name</label>
+      <input id="name" name="name" maxlength="100" autocomplete="name" value="{{ values.get('name','') }}" required>
+      {% if errors.get('name') %}<p class="field-error">{{ errors.get('name') }}</p>{% endif %}
+
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" maxlength="255" autocomplete="email" value="{{ values.get('email','') }}" required>
+      {% if errors.get('email') %}<p class="field-error">{{ errors.get('email') }}</p>{% endif %}
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" required>
+      {% if errors.get('password') %}<p class="field-error">{{ errors.get('password') }}</p>{% endif %}
+
+      <label for="confirm_password">Confirm password</label>
+      <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required>
+      {% if errors.get('confirm_password') %}<p class="field-error">{{ errors.get('confirm_password') }}</p>{% endif %}
+
+      <div id="client-errors" class="client-errors" aria-live="polite"></div>
+      <button class="button button-primary button-full" type="submit">Create account <span>→</span></button>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='validation.js') }}"></script>{% endblock %}

@@ -1,0 +1,75 @@
+
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Taskly{% endblock %} · Taskly</title>
+  <script>
+    try {
+      document.documentElement.dataset.theme =
+        localStorage.getItem("taskly-theme") || "light";
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}">
+      <span class="brand-mark">✓</span> Taskly
+    </a>
+    <div class="user-menu">
+      <button type="button" class="button button-quiet"
+              id="theme-toggle" aria-label="Toggle dark mode">
+        <span id="theme-label">Dark mode</span>
+      </button>
+      {% if session.get('user_id') %}
+        <span class="greeting">Hi, {{ session.get('name', 'there') }}</span>
+        <form method="post" action="{{ url_for('logout') }}">
+          <button class="button button-quiet" type="submit">Log out</button>
+        </form>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="page">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-list" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">A simple place to keep your day on track.</footer>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const button = document.getElementById("theme-toggle");
+      const label = document.getElementById("theme-label");
+
+      function updateLabel() {
+        label.textContent =
+          root.dataset.theme === "dark" ? "Light mode" : "Dark mode";
+      }
+
+      updateLabel();
+
+      button.addEventListener("click", function () {
+        root.dataset.theme =
+          root.dataset.theme === "dark" ? "light" : "dark";
+        try {
+          localStorage.setItem("taskly-theme", root.dataset.theme);
+        } catch (e) {}
+        updateLabel();
+      });
+    })();
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
